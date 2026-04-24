@@ -31,17 +31,18 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [Date, Time]
+### Entry 1 - [April 24, 2026 and  5:00 BM]
 **What I implemented**: 
-
+I worked on tack1 and added a ReentrantLock in the SharedResources class. I used it to lock the three counters, contextswitchcount, completedprocesscount, and totlwaitingtime.
 **Challenges encountered**: 
-
+The code was freezing up when i first ran it. I realized the threads were getting stuck because the lock wasn't opening back up properly after the first use.
 **How I solved it**: 
-
+I used a try- finally block for the counters.I put lock()
+at the start and unlock() in the finally part so it always releases.The fixed the freeze and now the program runs smooth.
 **Testing approach**: 
-
+I ran the program about 4 times, The number of finshed operation -16- and log entries -62- were identical each time. I detected very minor changes in total waiting time -just a few milliseconds- which is normal given how the os handles threads, But the oveall result are consistent and accurate.
 **Time spent**: 
-
+40 minutes
 ---
 
 ### Entry 2 - [Date, Time]
