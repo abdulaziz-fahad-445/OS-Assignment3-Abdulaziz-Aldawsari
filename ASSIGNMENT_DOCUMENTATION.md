@@ -31,7 +31,7 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [April 24, 2026 and  5:00 BM]
+### Entry 1 - [April 24, 2026 and  5:00 PM]
 **What I implemented**: 
 I worked on tack1 and added a ReentrantLock in the SharedResources class. I used it to lock the three counters, contextswitchcount, completedprocesscount, and totlwaitingtime.
 **Challenges encountered**: 
@@ -45,17 +45,18 @@ I ran the program about 4 times, The number of finshed operation -16- and log en
 40 minutes
 ---
 
-### Entry 2 - [Date, Time]
+### Entry 2 - [April 25, 2026 and  11:00 PM]
 **What I implemented**: 
-
+I just added a  ReentrantLock to the SharedResources part. I need it to protect the executionlog and those shared counters.
 **Challenges encountered**: 
+The issue was with the Arraylist because it's not thread safe. If wo threads try to add somthing at the same time, The program just crashes with a ConcurrentModificationException error.
 
 **How I solved it**: 
-
+I used lock.lock() before any that touches the shared data. Anyway, I put lock.unlock() in a finally blocks so the program won't freez up if somthing goes wrong.
 **Testing approach**: 
-
+I ran the code mant times, I just checked the terminal to make sure there are no red errors and the logs are correct.
 **Time spent**: 
-
+30 minutes
 ---
 
 ### Entry 3 - [Date, Time]
