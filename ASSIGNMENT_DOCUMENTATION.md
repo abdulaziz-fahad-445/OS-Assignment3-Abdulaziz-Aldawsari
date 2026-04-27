@@ -59,17 +59,18 @@ I ran the code mant times, I just checked the terminal to make sure there are no
 30 minutes
 ---
 
-### Entry 3 - [Date, Time]
+### Entry 3 - [April 27, 2026 and  9:50 PM]
 **What I implemented**: 
-
+I added a Semaphore to SharedResources. Then in the Process class 
+I called acquire() before the process runs and release() after it, Finishes so only one process touches the cpu at a time.
 **Challenges encountered**: 
-
+I didnt know where exactly release() should go. I throught what if the thread crashes mid execution, The semaphore stays taken and nothing else can run after that.
 **How I solved it**: 
-
+I remembered what i did in ernty 1 and 2 with the lock, so I just did the same thing and threw release() in the finally block, Worked fine after that
 **Testing approach**: 
-
+Ran it like 5 or 6 times, Context switches were -31- every time and completed proceses always -16-. No crashes no freezing so looks good.
 **Time spent**: 
-
+45 minutes
 ---
 
 ### Entry 4 - [Date, Time]
