@@ -109,7 +109,16 @@ Ran it like 5 or 6 times, Context switches were -31- every time and completed pr
 
 **Your Answer**:
 
-[Your answer here - 4-6 sentences with code examples]
+[Race Condition-1-shared Counters: The first race condition I found with the shared counters like contextswitchcount.The issue is that when you write contextswitchcount++ it looks simple but is actually 3 steps,read the value,add 1,then write it back.So if two threads are running at the same time and both read the value as 5,they will both write 6 back.We lost a count.This will make the statistics at the end show wrong number
+Example code java:
+//thread 1 reads 5
+//thread 2 also reads 5 at same time
+//both write 6, but it should be 7
+contextSwitchCount++;
+
+Race Condition-2-Executionlog:The second is the executilong Arraylist.Arraylist in java is not thread safe,It was never made to handle multiple threads adding to it at the same time.If two threads call add() together the internal array can get messed up and you might lose entries or get an exception thrown.
+Example code java:
+executionLog.add(message); // two threads here at same time = problem.]
 
 ---
 
@@ -118,7 +127,20 @@ Ran it like 5 or 6 times, Context switches were -31- every time and completed pr
 
 **Your Answer**:
 
-[Your answer here - explain your implementation choices]
+[So basically a ReentranLock is used when you want only one thread inside a section at a time,Its for mutual exclusion,The reentrant part just means the same thread can lock it again without getting stuck.A Semphore is a bit different,It controls how many thrads can access somthing at once using permits.
+I used the ReentranLock to protect the counters and the Arraylist because I just need one thread modifying them at a time,Nothing complicated,
+ code java:
+ lock.lock();
+try {
+    contextSwitchCount++;
+} finally {
+    lock.unlock();
+}
+For the cpu access I used Semaphore(1) because it make more sens conecptually,The cpu is a resource with limited slots and the semphore represents that.Also if we ever wanted to simulate 2 cpus we just change the number to 2,Way easier than changing a lock.
+code java:
+SharedResources.cpuSemaphore.acquire();
+//running on cpu
+SharedResources.cpuSemaphore.release();]
 
 ---
 
@@ -127,7 +149,18 @@ Ran it like 5 or 6 times, Context switches were -31- every time and completed pr
 
 **Your Answer**:
 
-[Your answer here - reference try-finally blocks, lock ordering, etc.]
+[Deadlock is basically when two threads get stuck waiting for each other and neither one can move forward. For example thread A is holding lock 1 and waiting for lock 2, but thread B is holding lock 2 and waiting for lock 1. So they both just sit there forever and the program freezes.
+Technique 1-finally block:
+Waht I did here is always put the lock.unlock() inside a finally block.The is if somthing goes wrong and an exception happens in the middle of the code,The lock will still get released.If didnt do this and the code crashed while holding the lock,Every other thread waiting for that lock would be stuck forever.
+code java:
+lock.lock();
+try {
+    completedProcessCount++;
+} finally {
+    lock.unlock();
+}
+Technique 2-one lock for everything:
+Instead of creating a different lock for each counter I just used one lock for all shared resources.Deadlocks usually happen when threads are grabbing multiple locks doing it in different orders,So they end up waiting on each other.Since I only have one lock in the whole program that problem cant happen because there is nothing to create a circular wait between threads.]
 
 ---
 
