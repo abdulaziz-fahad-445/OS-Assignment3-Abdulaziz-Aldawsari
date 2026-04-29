@@ -182,52 +182,104 @@ Instead of creating a different lock for each counter I just used one lock for a
 ### Critical Section #1: Counter Variables
 
 **Which variables**: 
-
+contextswitchcount,completedprocesscount,totalwaitingtime
 **Why they need protection**: 
-
+These three variables get updated by different threads running at the same time. The issue is that incrementing a variable is not one step, the thread reads it, adds to it, then saves it back.Two threads doing this together will both read the same old number and one change gets lost.This breaks the counts completely.
 **Synchronization mechanism used**: 
-
+Reentrantlock
 **Code snippet**:
 ```java
-// Paste your implementation here
+ public static void incrementContextSwitch() {
+        lock.lock(); // Acquire a lock to avoid race coditions during context switch incremen 
+        try {
+            contextSwitchCount++;
+        } finally{
+            lock.unlock();
+        }
+        
+    }
+    
+    // Method to increment completed process counter
+    public static void incrementCompletedProcess() {
+        lock.lock(); // protect shared counter for completed processes 
+        try {
+             completedProcessCount++;
+        } finally{
+             lock.unlock();
+        }
+    }
+    
+    // Method to add waiting time
+    public static void addWaitingTime(long time) {
+        // TODO: 
+        lock.lock();// Synchronize access to the overall waiting time accumulator 
+        try {
+             totalWaitingTime += time;
+        } finally{
+         lock.unlock();
+        }
+       
+    }
 ```
 
 **Justification**: 
-
+One thread locks,Update the variable,Then unlock.The next thread can only go in after that.The fnally block mackes sure the lock alawys gets released no matter what happens.
 ---
 
 ### Critical Section #2: Execution Log
 
 **What resource**: 
-
+The executionlog which is an Arraylist of string.
 **Why it needs protection**: 
-
+The problem is that Java's Arraylist isn't thread-safe.When multiple threads try to call .add() at the exact same time,The list's internal structure can break.This leads to missing log entries or the program crashing a ConcurrentModificationException error.
 **Synchronization mechanism used**: 
-
+Reentrantlock
 **Code snippet**:
 ```java
-// Paste your implementation here
+public static void logExecution(String message) {
+        lock.lock(); // Acquire the lock to protect the Arrylist
+        try{
+        executionLog.add(message);
+        }
+        finally{
+            lock.unlock();
+        }
+}
+    
 ```
 
 **Justification**: 
-
+I used a lock to wrap the add method so only one thread can write to the log at a time.Putting the unlock() in a finally block is a safety measure,It mackes sure the lock is always released even if an error happens,Which prevents the whole simulation from getting stuck in a deadlock. 
 ---
 
 ### Critical Section #3: CPU Semaphore
 
 **Purpose of semaphore**: 
-
+My goal was making sure only one process thread touches the cpu logic at a time,Since we only have one cpu here.
 **Number of permits and why**: 
-
+I gave it 1 permit.Having more than 1 would let multiple processes run together which is wrong for this simulation.
 **Where implemented**: 
-
+Both run() and runtocompletion() aquire it at the start and release it in finally.
 **Code snippet**:
 ```java
-// Paste your implementation here
+ //This ensures only one process thread can simulate CPU access at a time
+    public static final Semaphore cpuSemaphore = new  Semaphore(1);
+
+    try { 
+          SharedResources.cpuSemaphore.acquire();
+   
+   }
+     catch (InterruptedException e1) {
+        Thread.currentThread().interrupt(); // Signal to the calling thread that an interruption occurred during semaphore acquisition
+
+        }  finally {  SharedResources.cpuSemaphore.release();
+
+        }
+    
 ```
 
 **Effect on program behavior**: 
-
+Each thread waits its turn at the semphore.When the running one finishes and release,The next waiting thread goes in,Processes end up running one after another which is exactly what round robin needs
 ---
 
 ## Part 4: Testing and Verification (2 marks)
