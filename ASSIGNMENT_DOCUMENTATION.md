@@ -285,54 +285,63 @@ Each thread waits its turn at the semphore.When the running one finishes and rel
 ## Part 4: Testing and Verification (2 marks)
 
 ### Test 1: Consistency Check
-**What I tested**: Running program multiple times to verify consistent results
-
+**What I tested**: 
+Consistency Check
 **Testing procedure**: 
 ```bash
-# Commands used (run the program at least 5 times)
+ Run: SchedulerSimulationSync
+ 5 times
 ```
 
 **Results**: 
-(Show that running multiple times produces consistent, correct results)
+(Run:   Contextswitches  completedprocesses  Totalwaitingtime    Logentries
+  1:        31                16                  743610ms         62
+  2:        31                16                  743600ms         62
+  3:        31                16                  743493ms         62
+  4:        31                16                  742737ms         62
+  5:        31                16                  742887ms         62 
+  )
 
 **Why synchronization is necessary**: 
-(Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
+(Okay so basically without the lock,Two threads can read the same variable at the same time and both try to update it.Like if contextswitchescount is 5 and two threads read it at the same time,They both make it 6 instead of 7.We lose an increment.Same thing with the Arraylist,Its not thread safe so two threads adding to it at the same time can mess it up or even crash the program.)
 
 **Conclusion**: 
-
+Every run gave the same contextswitches-31-,Same completed processes-16-,And same log enties-62-.The waiting time changed by a few ms each time but thats just normal timing differences from the os,Not a real problem.
 ---
 
 ### Test 2: Exception Testing
-**What I tested**: Checking for ConcurrentModificationException
-
+**What I tested**: 
+Basically I was checking if the program would break or throw any errors when threads are running together,Like ConcurrentModificationException since multiple threads share the same Arraylist.
 **Testing procedure**: 
-
+Ran it 5 times and just kept an eye on the terminal output
 **Results**: 
-
+Nothing broke.All 5 runs went through fine with no errors showing up.Logentries stayed at -62- every time so nothing got lost either.
 **What this proves**: 
-
+So the reason no exception showed up is because only one thread can write to the log list at a time.If we remove the lock,Things would go wrong pretty fast since threads dont wait for each other and the list would get hit from multiple sides at once.Seeing -62- entries every run with zero crashes was enough for me to confirm the locking mechanism is holding up fine.
 ---
 
 ### Test 3: Correctness Verification
-**What I tested**: Verifying correct final values (total burst time, context switches, etc.)
-
+**What I tested**: Verifying correct final values (Checking if the final numbers actually make sense logically)
 **Expected values**: 
-
+Since we use the student id as a random seed the processes never change between runs,So we should always get -16- completed processes.Contextswitches should be -31-Since thats how many times run() gets called total.And logentrie should be 62 because each quantum writes exactly 2 messages. 
 **Actual values**: 
-
+1-CompletedProcesses: 16 
+2-ContextSwitches: 31 
+3-LogEntries: 62 
+4-all burst times were the same in every run 
 **Analysis**: 
-
+Everything matched what i expected.No numbers were off,Nothing was missing.The locks are clearly preventing ane race conditions from messing up the counters. 
 ---
 
 ### Test 4: Different Scenarios
-**Scenario tested**: [e.g., different time quantum, more processes, etc.]
+**Scenario tested**: [understanding why waiting time changes slightly each run even though everything else stays the same.]
 
 **Purpose**: 
-
+I wanted to figure out if the small waiting time differences mean something is wrong or if its just normal
 **Results**: 
-
+The number of processes and their burst times never changed because theyre generated from a fixed seed.But waiting time uses System.currentTimeMillis() which is real clock time,So it naturally varies a little.For example P1 had waiting times between 20ms and 29ms across the 5 runs.
 **What I learned**: 
-
+The small waiting time differences are totally normal and dont mean anything is broken.If there was actually a race condition happening,The contextswitchcount or completedprocesscount would be wrong in some runs.That never happened so the synchronization is working fine.
 ---
 
 ## Part 5: Reflection and Learning
