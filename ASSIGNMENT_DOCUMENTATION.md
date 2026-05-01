@@ -348,7 +348,7 @@ The small waiting time differences are totally normal and dont mean anything is 
 
 ### What I learned about synchronization:
 
-[6-8 sentences about key concepts, challenges, insights]
+[Honestly,I didn't fully get synchronization when we just looked at the lecture slides since it felt super abstract.But writing the actual Java code was a completely different story.I had to use a ReentrantLock for the context switch counter because if I didn't,The threads just stepped all over each other and the final numbers came out wrong every single time. The Semaphore part was interesting too since it let me control exactly how many processes could hit the CPU at once. My biggest headache,Though,Was the ArrayList.I kept getting that ConcurrentModificationException error and couldn't figure out why until I realized standard lists in Java aren't thread safe at all.Fixing those bugs took a while, But it finally made it click for me why os memory management has to be so strict.]
 
 ---
 
@@ -357,14 +357,15 @@ The small waiting time differences are totally normal and dont mean anything is 
 Give TWO examples where synchronization is critical:
 
 **Example 1**: 
-
+Multiplayer games:Two players grabbing the same item at the same time without synchronization both get it and the game breaks.You need locking so only one action goes through at a time.
 **Example 2**: 
-
+Booking Tickets Online:When a popular movie or concert drops,Thousands of people are clicking on the exact same seats.Synchronization makes sure that the millisecond someone clicks a seat,It gets locked. Without this,The system would sell the exact same ticket to five different people.
 ---
 
 ### How I would explain synchronization to others:
 
-[Explain to someone who just finished Assignment 1 - use simple terms and analogies]
+[So imagine you and three friends are all trying to play a game,But you only have one PlayStation controller.If you all try to grab it and hit the buttons at the same time, the game goes crazy and nothing works right.That’s what we call a race condition.
+Synchronization is basically just setting a strict rule:Only the person physically holding the controller gets to play. In our code, that controller is the "lock". If a thread wants to change a variable,It has to wait in line, grab the lock,Do its thing,And then hand the lock to the next guy.]
 
 ---
 
