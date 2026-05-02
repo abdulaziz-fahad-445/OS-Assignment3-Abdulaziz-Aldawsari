@@ -1,8 +1,8 @@
 # Assignment 3 - Complete Documentation
 
-**Student Name**: [Your Full Name]  
-**Student ID**: [Your ID]  
-**Date Submitted**: [Submission Date]
+**Student Name**: [Abdulaziz Fahad Aldawsari]  
+**Student ID**: [445050097]  
+**Date Submitted**: [May 2, 2026]
 
 ---
 
@@ -73,17 +73,18 @@ Ran it like 5 or 6 times, Context switches were -31- every time and completed pr
 45 minutes
 ---
 
-### Entry 4 - [Date, Time]
+### Entry 4 - [May 2, 2026 and  1:20 PM]
 **What I implemented**: 
-
+I added the statistics output at the end.Things like the summary table for each process showing priority,Burst time and waiting time. Also the totals for context switches,completed processes and total waiting time.
 **Challenges encountered**: 
-
+The waiting time kept changing a little bit between runs and i wasnt sure if somthing was wrong or if thats just how it works.
 **How I solved it**: 
 
+I checked the output carefully a few times and figured out its just the os doing its thing with thread scheduling.The numbers that matter like context switches -31- and completed processes -16- were always the same so the sync is working fine.
 **Testing approach**: 
-
+Ran it several times and compared.The main numbers never changed,Only waiting time had tiny differences which is normal.
 **Time spent**: 
-
+25 minutes
 ---
 
 ### Entry 5 - [Date, Time]
@@ -372,30 +373,34 @@ Synchronization is basically just setting a strict rule:Only the person physical
 ## Part 6: GitHub Repository Information
 
 **Repository URL**: 
-
+https://github.com/abdulaziz-fahad-445/OS-Assignment3-Abdulaziz-Aldawsari.git
 **Number of commits**: 
-
+9
 **Commit messages**: 
-1. 
-2. 
-3. 
-4. 
-
+1. First Commet:Set my student ID:445050097
+2. Task_1_Add ReentranLock etc_&Entry_1
+3. Task2:Add ReentranLock to protect execution log etc_&Entry_2
+4. Task 3: Add semaphore to control etc_&entry_3
+5. Answer Part_2_question
+6. Answer Part_3_question 
+7. Answer Part _4_Testing and Verification
+8. Answer Part _5_Reflection and Learning
+9. Answer Part _6_Summary&_entry_4
 ---
 
 ## Summary
 
 **Total time spent on assignment**: 
-
+Approximately 9 hours
 **Key takeaways**: 
-1. 
-2. 
-3. 
+1. Mutex one thread at a time,Semaphore you control how many
+2. Deadlock freezes your program with zero error messages
+3. Race conditions don't show up every run which makes them annoying to catch
 
 **Most challenging aspect**: 
-
+Telling mutex and semaphore apart at first
 **What I'm most proud of**: 
-
+The synchronization actually worked in the end
 ---
 
 **End of Documentation**
